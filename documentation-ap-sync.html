@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AP Import — Alur Sync &amp; Eligibility</title>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                background: #f5f7fa;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, sans-serif;
+                color: #1f2937;
+                line-height: 1.7;
+                padding: 40px 20px;
+            }
+            .container {
+                max-width: 1000px;
+                margin: 0 auto;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+                padding: 48px 56px;
+            }
+            @media (max-width: 768px) {
+                .container {
+                    padding: 24px 20px;
+                }
+            }
+            h1 {
+                font-size: 28px;
+                font-weight: 800;
+                color: #111827;
+                margin-bottom: 6px;
+            }
+            h2 {
+                font-size: 20px;
+                font-weight: 700;
+                color: #1f2937;
+                margin-top: 40px;
+                margin-bottom: 16px;
+                padding-bottom: 8px;
+                border-bottom: 2px solid #e5e7eb;
+            }
+            h2:first-of-type {
+                margin-top: 0;
+            }
+            p {
+                margin-bottom: 14px;
+                font-size: 15px;
+            }
+            ul,
+            ol {
+                margin: 10px 0 16px 24px;
+                font-size: 15px;
+            }
+            li {
+                margin-bottom: 6px;
+            }
+            strong {
+                font-weight: 700;
+                color: #111827;
+            }
+            code {
+                background: #f1f5f9;
+                padding: 2px 7px;
+                border-radius: 5px;
+                font-size: 13px;
+                font-family: "JetBrains Mono", "Consolas", monospace;
+                color: #0c4a6e;
+            }
+            pre {
+                background: #1e293b;
+                color: #e2e8f0;
+                padding: 16px 20px;
+                border-radius: 10px;
+                overflow-x: auto;
+                font-size: 13px;
+                line-height: 1.55;
+                margin: 12px 0 18px;
+                font-family: "JetBrains Mono", "Consolas", monospace;
+            }
+            pre code {
+                background: none;
+                padding: 0;
+                color: inherit;
+                font-size: inherit;
+            }
+            .badge {
+                display: inline-block;
+                padding: 2px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 1.4;
+            }
+            .badge-green {
+                background: #dcfce7;
+                color: #166534;
+            }
+            .badge-red {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+            .badge-blue {
+                background: #dbeafe;
+                color: #1e40af;
+            }
+            .badge-amber {
+                background: #fef3c7;
+                color: #92400e;
+            }
+            .badge-purple {
+                background: #f3e8ff;
+                color: #6b21a8;
+            }
+            .badge-gray {
+                background: #f3f4f6;
+                color: #4b5563;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 16px 0 20px;
+                font-size: 14px;
+            }
+            table th {
+                background: #f8fafc;
+                font-weight: 700;
+                text-align: left;
+                padding: 12px 16px;
+                border-bottom: 2px solid #e2e8f0;
+                color: #374151;
+                font-size: 13px;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+            table td {
+                padding: 12px 16px;
+                border-bottom: 1px solid #f1f5f9;
+                vertical-align: top;
+            }
+            table tr:last-child td {
+                border-bottom: none;
+            }
+            .flowchart-wrap {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 24px 16px;
+                margin: 20px 0 16px;
+                overflow-x: auto;
+            }
+            .flowchart-wrap svg {
+                max-width: 100%;
+                height: auto;
+            }
+            .card-flow {
+                border-left: 4px solid;
+                border-radius: 8px;
+                padding: 16px 20px;
+                margin: 14px 0;
+            }
+            .card-flow-blue {
+                background: #eff6ff;
+                border-color: #3b82f6;
+            }
+            .card-flow-green {
+                background: #f0fdf4;
+                border-color: #22c55e;
+            }
+            .card-flow-orange {
+                background: #fff7ed;
+                border-color: #f97316;
+            }
+            hr {
+                border: none;
+                border-top: 1px solid #e5e7eb;
+                margin: 28px 0;
+            }
+            .highlight-box {
+                background: #fffbeb;
+                border: 1px solid #fde68a;
+                border-radius: 10px;
+                padding: 16px 20px;
+                margin: 14px 0;
+            }
+            .highlight-box strong {
+                color: #92400e;
+            }
+            footer {
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 1px solid #e5e7eb;
+                font-size: 13px;
+                color: #9ca3af;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Alur Sync &amp; Eligibility AP Import</h1>
+            <p style="color: #6b7280; margin-bottom: 24px">
+                Dokumentasi teknis &mdash; bagaimana sistem menentukan PO yang
+                eligible untuk masuk antrian approval.
+            </p>
+
+            <!-- ============================================================ -->
+            <h2>1. Trigger Sync</h2>
+
+            <p>Ada dua cara sync dipicu:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 100px">Cara</th>
+                        <th>Kode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-blue">Auto</span></td>
+                        <td>
+                            <code>performApSync({ auto: true })</code> di
+                            <code>$(document).ready()</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-amber">Manual</span></td>
+                        <td>
+                            Konfirmasi SweetAlert &rarr;
+                            <code>performApSync({ auto: false })</code>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Bisa juga sync per PO dengan mengisi input
+                <strong>"PO (opsional)"</strong> lalu klik Sync.
+            </p>
+
+            <!-- ============================================================ -->
+            <h2>
+                2. Flow Sync &mdash; <code>performApSync()</code> &rarr; Backend
+            </h2>
+
+            <p>Frontend mengirim POST ke:</p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Halaman</th>
+                        <th>Endpoint</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>/ap_import</code></td>
+                        <td>
+                            <code>{{ url('ap-import/sync') }}</code> &rarr;
+                            <code>ApImportController@sync()</code>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>/ap_import_dev</code></td>
+                        <td>
+                            <code>{{ url('ap-import-dev/sync') }}</code> &rarr;
+                            <code>ApImportDevController@sync()</code>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Kedua controller memanggil method yang
+                <strong>sama persis</strong>:
+            </p>
+
+            <pre><code>// Jika ada PO spesifik
+$result = $apImportSyncService-&gt;syncPo($purchasingDocument);
+
+// Jika sync all
+$result = $this-&gt;apImportService-&gt;syncAll();  // internalnya panggil syncPo loop</code></pre>
+
+            <!-- ============================================================ -->
+            <h2>3. Sync All &mdash; <code>syncAll()</code></h2>
+
+            <div class="card-flow card-flow-blue">
+                <pre
+                    style="
+                        background: transparent;
+                        color: #1e3a5f;
+                        padding: 0;
+                        margin: 0;
+                        font-size: 14px;
+                        line-height: 1.8;
+                    "
+                ><code>syncAll()
+  |
+  +-- getPurchasingDocumentsForScan()
+  |     &rarr; JOIN EtblPibHdr + EtblPibDok
+  |     &rarr; filter DokKd IN ('380', '705', '740')  &larr; dokumen relevan AP Import
+  |     &rarr; return list purchasing_document unik
+  |
+  +-- loop tiap PO &rarr; syncPo($po)
+        |
+        +-- Jika eligible &rarr; hitung $eligible++, simpan $eligibleItems[]
+        +-- Jika synced  &rarr; hitung $synced++
+        +-- Jika error   &rarr; hitung $failed++, log warning</code></pre>
+            </div>
+
+            <!-- ============================================================ -->
+            <h2>
+                4. Inti: <code>evaluatePo()</code> &mdash; Menentukan
+                Eligibility
+            </h2>
+
+            <p>
+                Ini adalah <strong>jantung</strong> logika sync. Method ini
+                menentukan apakah suatu PO <strong>eligible</strong> (memenuhi
+                syarat) untuk masuk ke antrian approval.
+            </p>
+
+            <div class="card-flow card-flow-orange">
+                <pre
+                    style="
+                        background: transparent;
+                        color: #7c2d12;
+                        padding: 0;
+                        margin: 0;
+                        font-size: 13px;
+                        line-height: 1.8;
+                    "
+                ><code>evaluatePo($purchasingDocument)
+|
++-- Cari sap_header berdasarkan purchasing_document
+|   +-- Jika tidak ada &rarr; X NOT ELIGIBLE (reason: sap_header_not_found)
+|
++-- Cari EtblPibHdr (PIB header)
+|   +-- Jika tidak ada &rarr; X NOT ELIGIBLE (reason: pib_header_not_found)
+|
++-- CEK TT-ADV-Z000 ------------------------------------+
+|   Jika payment_method == 'TT'                          |
+|   DAN payment_type   == 'ADV'                         |
+|   DAN payment_term   == 'Z000'                        |
+|   &rarr; X NOT ELIGIBLE (PMK / Pembayaran di Muka)      |
+|     (reason: tt_adv_z000)                             |
++--------------------------------------------------------+
+|
++-- CEK DOKUMEN 380 (INVOICE) -----------------------------+
+|   Ambil SEMUA dokumen 380 untuk header ini              |
+|   Jika ada:                                              |
+|     Loop tiap dokumen 380:                               |
+|       +-- isLocked == true?                              |
+|       |   Tidak &rarr; X NOT ELIGIBLE                      |
+|       |     (document_380_not_locked)                    |
+|       |                                                    |
+|       +-- Sudah upload final document?                   |
+|       |   (via Vendor Portal API)                        |
+|       |   Tidak &rarr; X NOT ELIGIBLE                      |
+|       |     (document_380_final_attachment_missing)      |
+|       |                                                    |
+|       +-- Semua ok &rarr; lanjut                           |
+|   Jika tidak ada dokumen 380 &rarr; skip check            |
++----------------------------------------------------------+
+|
++-- Dapatkan vendor_code dari SAP header
+|
++-- Bangun SNAPSHOT data PO:
+|   * Pilih SnapshotBuilder sesuai shipment_mode (AIR atau SEA)
+|   * Snapshot = hash SHA-256 dari seluruh payload data PO
+|     (item amounts, qty, transport documents, dll)
+|   * Snapshot dipakai nanti untuk deteksi perubahan data
+|
++-- CEK TRIGGER TYPE (ada 2 jalur):
+|
+|  +-- [A] INVOICE DATE TRIGGER ------------------------+
+|  |  Cek: usesInvoiceDateTrigger($vendorCode)          |
+|  |  &rarr; ApImportVendorInvDate::where('vendor_code',   |
+|  |       $vendorCode)-&gt;where('is_active', 1)          |
+|  |                                                    |
+|  |  Jika TRUE:                                        |
+|  |   * Cari dokumen 380 (Invoice)                     |
+|  |   * Jika dokumen 380 tidak ada / DokTg             |
+|  |     kosong &rarr; X NOT ELIGIBLE                     |
+|  |     (invoice_date_missing)                         |
+|  |   * triggerDate = DokTg dari invoice               |
+|  |   * due_date = triggerDate + paymentTermDays       |
+|  |   * V ELIGIBLE                                     |
+|  +----------------------------------------------------+
+|
+|  +-- [B] TRANSPORT DOCUMENT TRIGGER -------------------+
+|  |  Jalur ini untuk vendor NON invoice-date           |
+|  |                                                    |
+|  |   * Ambil SEMUA transport document                 |
+|  |     (AWB untuk AIR, B/L untuk SEA)                 |
+|  |   * Jika tidak ada &rarr; X NOT ELIGIBLE              |
+|  |     (transport_doc_missing)                        |
+|  |                                                    |
+|  |   * Loop tiap transport document:                  |
+|  |     +-- Jika isLocked == false &rarr; X NOT ELIGIBLE    |
+|  |     |   (transport_doc_not_locked)                 |
+|  |     +-- Cek attachment type:                      |
+|  |     |   - paymentTermDays &lt; 30 &rarr; butuh &quot;draft&quot;   |
+|  |     |   - paymentTermDays &gt;= 30 &rarr; butuh &quot;final&quot;  |
+|  |     |   Pengecekan ke Vendor Portal API:           |
+|  |     |   GET /api/po-document-file/{tblPibdokId}    |
+|  |     |   Jika tidak ada &rarr; X NOT ELIGIBLE          |
+|  |     |   (attachment_{type}_missing)                |
+|  |     +-- Jika DokTg kosong &rarr; X NOT ELIGIBLE       |
+|  |         (bl_date_missing)                          |
+|  |                                                    |
+|  |   * Semua ok &rarr; triggerDate = DokTg doc pertama   |
+|  |   * due_date = triggerDate + paymentTermDays       |
+|  |   * V ELIGIBLE                                     |
+|  +----------------------------------------------------+
+|
++-- Return array berisi:
+     eligible =&gt; true/false
+     supplier_name
+     vendor_code
+     payment_term_raw, payment_term_days
+     shipment_mode (AIR/SEA)
+     trigger_doc_kd (380/705/740)
+     trigger_attachment_type (invoice_date/draft/final)
+     bl_date (triggerDate)
+     due_date
+     snapshot_hash (SHA-256 dari payload)
+     snapshot_payload (array data lengkap PO)</code></pre>
+            </div>
+
+            <!-- ============================================================ -->
+            <h2>
+                5. Setelah Dinyatakan Eligible &mdash; <code>syncPo()</code>
+            </h2>
+
+            <div class="card-flow card-flow-green">
+                <pre
+                    style="
+                        background: transparent;
+                        color: #14532d;
+                        padding: 0;
+                        margin: 0;
+                        font-size: 13px;
+                        line-height: 1.8;
+                    "
+                ><code>syncPo($po)
+|
++-- evaluatePo($po)
+|
++-- Jika TIDAK eligible &rarr; return { synced:false, eligible:false, reason }
+|
++-- Jika ELIGIBLE:
+|
+|  +-- PO BARU (belum ada di ap_import_queue) ----------+
+|  |  * INSERT queue (status: pending_review)           |
+|  |  * INSERT history "Pending Review"                 |
+|  |  * return { action: 'created', ... }               |
+|  +----------------------------------------------------+
+|
+|  +-- PO SUDAH ADA -------------------------------------+
+|  |  * Cek snapshot hash:                              |
+|  |    hash_lama vs hash_baru                          |
+|  |                                                    |
+|  |  +-- HASH BERUBAH ------------------------------+  |
+|  |  |  * Update data queue                         |  |
+|  |  |  * Reset status ke PENDING                   |  |
+|  |  |  * Jika sebelumnya APPROVED/REJECTED         |  |
+|  |  |    &rarr; clear approved_at/rejected_at          |  |
+|  |  |  * Clear &amp; re-insert history                  |  |
+|  |  |  * action: 'updated' atau 'reopened'          |  |
+|  |  +----------------------------------------------+  |
+|  |                                                    |
+|  |  +-- HASH SAMA, status PENDING -----------------+  |
+|  |  |  * Update data queue (minor)                 |  |
+|  |  |  * action: 'updated'                         |  |
+|  |  +----------------------------------------------+  |
+|  |                                                    |
+|  |  +-- HASH SAMA, status FINAL -------------------+  |
+|  |  |  (approved / rejected)                       |  |
+|  |  |  * Tidak update apa-apa                      |  |
+|  |  |  * action: 'unchanged'                       |  |
+|  |  +----------------------------------------------+  |
+|  +----------------------------------------------------+
+|
++-- return array lengkap dengan eligible_items
+     (termasuk hash_change proof untuk dev)</code></pre>
+            </div>
+
+            <!-- ============================================================ -->
+            <h2>6. Response ke Frontend</h2>
+
+            <p>
+                <strong><code>ap_import</code> (production):</strong> Hanya
+                tampilkan notifikasi Swal
+            </p>
+
+            <pre><code>res = {
+  success: true/false,
+  meta: { total_scanned, eligible, synced, failed },
+  eligible_items: [...],        // &larr; data dikirim tapi TIDAK digunakan
+  swal: { type, title, html }
+}</code></pre>
+
+            <p>
+                <strong><code>ap_import_dev</code> (development):</strong>
+                Tampilkan notifikasi + <strong>Eligible Modal</strong>
+            </p>
+
+            <pre><code>res = {
+  ...,
+  eligible_items: [
+    {
+      purchasing_document: "PO-12345",
+      eligible_reason: "Sea/Land, payment term 30 days, B/L (705) final, Document B/L Date set, due date 15 Jun 2026",
+      action: "created" | "updated" | "reopened" | "unchanged",
+      status_change: "New &mdash; added to Need Approval",
+      status_html: "&lt;span class=...&gt;Pending Review&lt;/span&gt;",
+      hash_change: {
+        changed: true/false,
+        hash_before: "abc...",
+        hash_after: "def...",
+        payload_before_json: "{...}",
+        payload_after_json: "{...}",
+        diff: [
+          { field: "amount", before: "1000", after: "1500" },
+          { field: "items.10.qty", before: "5", after: "10" }
+        ]
+      }
+    }
+  ]
+}</code></pre>
+
+            <!-- ============================================================ -->
+            <h2>7. Flowchart &mdash; Alur Lengkap</h2>
+
+            <div class="flowchart-wrap">
+                <div class="mermaid" id="mermaid-diagram"></div>
+            </div>
+
+            <script>
+                (function () {
+                    var def = [
+                        "flowchart TD",
+                        "    A[User klik Sync / Auto-load] --> B{Ada PO spesifik?}",
+                        "    B -- Ya --> C[syncPo single PO]",
+                        "    B -- Tidak --> D[syncAll]",
+                        "    D --> E[getPurchasingDocumentsForScan ~ DokKd: 380, 705, 740]",
+                        "    E --> F[Loop tiap PO]",
+                        "    F --> G[evaluatePo]",
+                        "    G --> H{SAP header ada?}",
+                        "    H -- Tidak --> I[X Not Eligible]",
+                        "    H -- Ya --> J{PIB header ada?}",
+                        "    J -- Tidak --> I",
+                        "    J -- Ya --> K0{TT + ADV + Z000?}",
+                        "    K0 -- Ya --> I",
+                        "    K0 -- Tidak --> K1{Ada dokumen 380?}",
+                        "    K1 -- Tidak --> K2{Vendor pake Invoice Date Trigger?}",
+                        "    K1 -- Ya --> L1{Loop tiap dok 380}",
+                        "    L1 --> L2{isLocked == true?}",
+                        "    L2 -- Tidak --> I",
+                        "    L2 -- Ya --> L3{Sudah upload final document?}",
+                        "    L3 -- Tidak --> I",
+                        "    L3 -- Ya --> L1",
+                        "    L1 -- Semua ok --> K2",
+                        "    K2 -- Ya --> L{Dok 380 ada and DokTg?}",
+                        "    L -- Tidak --> I",
+                        "    L -- Ya --> M[V ELIGIBLE ~ triggerDate = DokTg 380]",
+                        "    K2 -- Tidak --> N{Ada transport doc? AWB / B/L}",
+                        "    N -- Tidak --> I",
+                        "    N -- Ya --> N1{Loop SEMUA transport doc}",
+                        "    N1 --> N2{isLocked == true?}",
+                        "    N2 -- Tidak --> I",
+                        "    N2 -- Ya --> N3{Attachment sesuai payment term?}",
+                        "    N3 -- Tidak --> I",
+                        "    N3 -- Ya --> N4{DokTg terisi?}",
+                        "    N4 -- Tidak --> I",
+                        "    N4 -- Ya --> N1",
+                        "    N1 -- Semua ok --> Q[V ELIGIBLE ~ triggerDate = DokTg doc pertama]",
+                        "    M & Q --> R[computeDueDate ~ triggerDate + paymentTermDays]",
+                        "    R --> S[buildSnapshot ~ hash SHA-256]",
+                        "    S --> T{Queue sudah ada?}",
+                        "    T -- Baru --> U[INSERT queue ~ status: pending_review]",
+                        "    T -- Ada --> V{Hash berubah?}",
+                        "    V -- Ya --> W[Update data ~ Reset ke pending ~ Clear approval data]",
+                        "    V -- Tidak --> X{Status pending?}",
+                        "    X -- Ya --> Y[Update minor]",
+                        "    X -- Tidak --> Z[Tidak ada perubahan ~ action: unchanged]",
+                        "    U & W & Y & Z --> AA[Return response + eligible_items]",
+                        "    AA --> AB[Frontend: reload table + notifikasi Swal]",
+                        "    AA --> AC[ap_import_dev saja: tampilkan Eligible Modal + Hash Proof cards]",
+                    ];
+                    var styles = [
+                        "style A fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af,font-weight:700",
+                        "style B fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style C fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px,color:#3730a3",
+                        "style D fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px,color:#3730a3",
+                        "style E fill:#f3e8ff,stroke:#9333ea,stroke-width:1px,color:#6b21a8",
+                        "style F fill:#f3e8ff,stroke:#9333ea,stroke-width:1px,color:#6b21a8",
+                        "style G fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#9d174d,font-weight:700",
+                        "style H fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style I fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,font-weight:700",
+                        "style J fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style K fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style L fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style M fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "style N fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style O fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style P fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style Q fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "style R fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px,color:#3730a3",
+                        "style S fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px,color:#3730a3",
+                        "style T fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style U fill:#dbeafe,stroke:#2563eb,stroke-width:1px,color:#1e40af",
+                        "style V fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style W fill:#fef2f2,stroke:#ef4444,stroke-width:1px,color:#991b1b",
+                        "style X fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "style Y fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px,color:#3730a3",
+                        "style Z fill:#f3f4f6,stroke:#6b7280,stroke-width:1px,color:#374151",
+                        "style AA fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af,font-weight:700",
+                        "style AB fill:#f0fdf4,stroke:#22c55e,stroke-width:1px,color:#166534",
+                        "style AC fill:#fdf4ff,stroke:#c026d3,stroke-width:2px,color:#86198f,font-weight:700",
+                    ];
+                    var el = document.getElementById("mermaid-diagram");
+                    if (el) {
+                        el.textContent =
+                            def.join("\n") + "\n" + styles.join("\n");
+                    }
+                })();
+            </script>
+
+            <!-- ============================================================ -->
+            <h2>Ringkasan</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 180px">Konsep</th>
+                        <th>Penjelasan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Eligible</strong></td>
+                        <td>
+                            PO memenuhi syarat untuk masuk antrian approval
+                            &mdash; punya dokumen PIB, SAP header, dokumen
+                            trigger (invoice 380 / transport AWB/B/L),
+                            attachment sesuai payment term, tanggal trigger
+                            terisi, <strong>dan</strong> semua dokumen 380
+                            (invoice) sudah di-<code>isLocked</code> serta sudah
+                            upload final document, <strong>dan</strong> dokumen
+                            transport (AWB/B/L) sudah di-<code>isLocked</code>.
+                            <strong>Kecuali</strong> PO dengan
+                            <code>TT + ADV + Z000</code> (PMK) yang otomatis
+                            tidak eligible.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trigger Type</strong></td>
+                        <td>
+                            Ada 2: <strong>Invoice Date</strong> (vendor
+                            tertentu via tabel
+                            <code>ap_import_vendor_inv_date</code>) atau
+                            <strong>Transport Document</strong> (AWB untuk AIR,
+                            B/L untuk SEA/LAND).
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Due Date</strong></td>
+                        <td>
+                            <code>triggerDate + paymentTermDays</code> &mdash;
+                            dihitung dari tanggal dokumen trigger ditambah term
+                            pembayaran.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Snapshot Hash</strong></td>
+                        <td>
+                            SHA-256 dari seluruh data PO (amount, qty, dokumen
+                            transport, dll) &mdash; dipakai untuk mendeteksi
+                            perubahan data antar sync.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Hash Change Proof</strong></td>
+                        <td>
+                            Hanya di <code>ap_import_dev</code> &mdash;
+                            menampilkan payload sebelum/sesudah, diff
+                            field-by-field, dan status apakah hash berubah.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Action</strong></td>
+                        <td>
+                            <code>created</code> (PO baru),
+                            <code>updated</code> (data berubah, masih pending),
+                            <code>reopened</code> (data berubah, PO sudah final
+                            jadi direopen), <code>unchanged</code> (tidak ada
+                            perubahan).
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr />
+
+            <div class="highlight-box">
+                <strong>&#128161; Catatan:</strong> Backend sync logic untuk
+                <code>ap_import</code> dan <code>ap_import_dev</code> adalah
+                <strong>identik</strong>. Perbedaan hanya di frontend &mdash;
+                <code>ap_import_dev</code> menampilkan modal eligible dengan
+                hash proof cards untuk keperluan debugging dan verifikasi
+                integritas data.
+            </div>
+
+            <footer>
+                Dokumentasi teknis AP Import &mdash; IMPAC System &bull;
+                generated dari analisis kode
+            </footer>
+        </div>
+
+        <script>
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: "base",
+                themeVariables: {
+                    background: "#ffffff",
+                    primaryColor: "#3b82f6",
+                    primaryTextColor: "#1e40af",
+                    primaryBorderColor: "#2563eb",
+                    lineColor: "#94a3b8",
+                    secondaryColor: "#f1f5f9",
+                    tertiaryColor: "#f8fafc",
+                    fontSize: "14px",
+                    fontFamily:
+                        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                },
+                flowchart: {
+                    useMaxWidth: true,
+                    htmlLabels: true,
+                    curve: "basis",
+                    padding: 12,
+                },
+            });
+        </script>
+    </body>
+</html>

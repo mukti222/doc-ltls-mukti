@@ -1,0 +1,1375 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>PPJK &amp; Vendor Invoice Approval — Alur Lengkap</title>
+        <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            body {
+                background: #f5f7fa;
+                font-family:
+                    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, sans-serif;
+                color: #1f2937;
+                line-height: 1.7;
+                padding: 40px 20px;
+            }
+            .container {
+                max-width: 1100px;
+                margin: 0 auto;
+                background: #fff;
+                border-radius: 16px;
+                box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+                padding: 48px 56px;
+            }
+            @media (max-width: 768px) {
+                .container {
+                    padding: 24px 20px;
+                }
+            }
+            h1 {
+                font-size: 28px;
+                font-weight: 800;
+                color: #111827;
+                margin-bottom: 6px;
+            }
+            h2 {
+                font-size: 20px;
+                font-weight: 700;
+                color: #1f2937;
+                margin-top: 40px;
+                margin-bottom: 16px;
+                padding-bottom: 8px;
+                border-bottom: 2px solid #e5e7eb;
+            }
+            h2:first-of-type {
+                margin-top: 0;
+            }
+            h3 {
+                font-size: 16px;
+                font-weight: 700;
+                color: #374151;
+                margin-top: 24px;
+                margin-bottom: 10px;
+            }
+            p {
+                margin-bottom: 14px;
+                font-size: 15px;
+            }
+            ul,
+            ol {
+                margin: 10px 0 16px 24px;
+                font-size: 15px;
+            }
+            li {
+                margin-bottom: 6px;
+            }
+            strong {
+                font-weight: 700;
+                color: #111827;
+            }
+            code {
+                background: #f1f5f9;
+                padding: 2px 7px;
+                border-radius: 5px;
+                font-size: 13px;
+                font-family: "JetBrains Mono", "Consolas", monospace;
+                color: #0c4a6e;
+            }
+            pre {
+                background: #1e293b;
+                color: #e2e8f0;
+                padding: 16px 20px;
+                border-radius: 10px;
+                overflow-x: auto;
+                font-size: 13px;
+                line-height: 1.55;
+                margin: 12px 0 18px;
+                font-family: "JetBrains Mono", "Consolas", monospace;
+            }
+            pre code {
+                background: none;
+                padding: 0;
+                color: inherit;
+                font-size: inherit;
+            }
+            .badge {
+                display: inline-block;
+                padding: 2px 10px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 600;
+                line-height: 1.4;
+            }
+            .badge-green {
+                background: #dcfce7;
+                color: #166534;
+            }
+            .badge-red {
+                background: #fee2e2;
+                color: #991b1b;
+            }
+            .badge-blue {
+                background: #dbeafe;
+                color: #1e40af;
+            }
+            .badge-amber {
+                background: #fef3c7;
+                color: #92400e;
+            }
+            .badge-purple {
+                background: #f3e8ff;
+                color: #6b21a8;
+            }
+            .badge-gray {
+                background: #f3f4f6;
+                color: #4b5563;
+            }
+            .badge-pink {
+                background: #fce7f3;
+                color: #9d174d;
+            }
+            .badge-indigo {
+                background: #e0e7ff;
+                color: #3730a3;
+            }
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 16px 0 20px;
+                font-size: 14px;
+            }
+            table th {
+                background: #f8fafc;
+                font-weight: 700;
+                text-align: left;
+                padding: 12px 16px;
+                border-bottom: 2px solid #e2e8f0;
+                color: #374151;
+                font-size: 13px;
+                text-transform: uppercase;
+                letter-spacing: 0.04em;
+            }
+            table td {
+                padding: 12px 16px;
+                border-bottom: 1px solid #f1f5f9;
+                vertical-align: top;
+            }
+            table tr:last-child td {
+                border-bottom: none;
+            }
+            .flowchart-wrap {
+                background: #f8fafc;
+                border: 1px solid #e2e8f0;
+                border-radius: 12px;
+                padding: 24px 16px;
+                margin: 20px 0 16px;
+                overflow-x: auto;
+            }
+            .flowchart-wrap svg {
+                max-width: 100%;
+                height: auto;
+            }
+            .card-flow {
+                border-left: 4px solid;
+                border-radius: 8px;
+                padding: 16px 20px;
+                margin: 14px 0;
+            }
+            .card-flow-blue {
+                background: #eff6ff;
+                border-color: #3b82f6;
+            }
+            .card-flow-green {
+                background: #f0fdf4;
+                border-color: #22c55e;
+            }
+            .card-flow-orange {
+                background: #fff7ed;
+                border-color: #f97316;
+            }
+            .card-flow-purple {
+                background: #faf5ff;
+                border-color: #9333ea;
+            }
+            .card-flow-pink {
+                background: #fdf2f8;
+                border-color: #ec4899;
+            }
+            hr {
+                border: none;
+                border-top: 1px solid #e5e7eb;
+                margin: 28px 0;
+            }
+            .highlight-box {
+                background: #fffbeb;
+                border: 1px solid #fde68a;
+                border-radius: 10px;
+                padding: 16px 20px;
+                margin: 14px 0;
+            }
+            .highlight-box strong {
+                color: #92400e;
+            }
+            .status-pill {
+                display: inline-block;
+                padding: 3px 12px;
+                border-radius: 999px;
+                font-size: 12px;
+                font-weight: 600;
+            }
+            footer {
+                margin-top: 40px;
+                padding-top: 20px;
+                border-top: 1px solid #e5e7eb;
+                font-size: 13px;
+                color: #9ca3af;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Alur PPJK &amp; Vendor Invoice Approval dengan BS</h1>
+            <p style="color: #6b7280; margin-bottom: 24px">
+                Dokumentasi teknis &mdash; bagaimana PPJK membuat akun, submit
+                tagihan, dan alur approval hingga payment processed.
+            </p>
+
+            <!-- ============================================================ -->
+            <h2>1. Ringkasan Alur</h2>
+            <p>
+                Alur ini mencakup siklus lengkap dari pembuatan akun PPJK,
+                pemilihan PPJK di PO, submit invoice, penentuan BS (Bahana
+                Prestasi) oleh EXIM Internal, approval berjenjang, hingga
+                finance memproses pembayaran.
+            </p>
+
+            <div class="card-flow card-flow-blue">
+                <strong>&#9312; PPJK Registration</strong> &rarr;
+                <strong>&#9313; PO Assignment</strong> &rarr;
+                <strong>&#9314; Email Notification</strong> &rarr;
+                <strong>&#9315; PPJK Login &amp; Submit</strong> &rarr;
+                <strong>&#9316; EXIM Internal (BS)</strong> &rarr;
+                <strong>&#9317; SPV Approve</strong> &rarr;
+                <strong>&#9318; AP Verificator</strong> &rarr;
+                <strong>&#9319; AP Approval</strong> &rarr;
+                <strong>&#9320; EXIM Manager</strong> &rarr;
+                <strong>&#9321; Finance Payment</strong>
+            </div>
+
+            <!-- ============================================================ -->
+            <h2>2. Aktor &amp; Role</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 160px">Role</th>
+                        <th>Akses</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <span class="badge badge-purple">Admin EXIM</span>
+                        </td>
+                        <td>Master PPJK &amp; PO Info</td>
+                        <td>Buat akun PPJK, pilih PPJK di PO, kirim email</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">PPJK</span></td>
+                        <td>PpjkTab (Vendor Portal)</td>
+                        <td>Lihat PO, Submit / Draft Invoice, Lihat History</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge badge-green">EXIM Internal</span>
+                        </td>
+                        <td>ExImInternalTab</td>
+                        <td>Assign BS per item, Approve/Reject</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-amber">SPV</span></td>
+                        <td>SpvTab</td>
+                        <td>Approve/Reject (lihat BS, bisa edit items)</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge badge-pink">AP Verificator</span>
+                        </td>
+                        <td>ApVerificatorTab</td>
+                        <td>Approve/Reject</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge badge-indigo">AP Approval</span>
+                        </td>
+                        <td>ApApprovalTab</td>
+                        <td>Approve/Reject</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <span class="badge badge-purple">EXIM Manager</span>
+                        </td>
+                        <td>ExImManagerTab</td>
+                        <td>Approve/Reject</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-amber">Finance</span></td>
+                        <td>FinanceTab</td>
+                        <td>Process Payment (pilih date range &amp; BS)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ============================================================ -->
+            <h2>3. Flow Detail</h2>
+
+            <!-- ─── 3.1 ────────────────────────────────────────────────────── -->
+            <h3>3.1 &mdash; PPJK Registration (Master PPJK)</h3>
+            <p>
+                Admin EXIM membuka menu <strong>Master PPJK</strong> dan membuat
+                akun PPJK baru dengan data:
+            </p>
+            <ul>
+                <li>
+                    <strong>PPJK Type:</strong> EMKL / Trucking / Forwarding
+                </li>
+                <li><strong>Company Name</strong> (ppjk_name)</li>
+                <li><strong>Email</strong> untuk login</li>
+                <li><strong>Password</strong></li>
+                <li><strong>Kontak</strong> (telepon, alamat, dll)</li>
+            </ul>
+            <p>
+                Data ini disimpan dan nantinya dipakai untuk autentikasi di
+                Vendor Portal &amp; identifikasi PO milik PPJK tersebut.
+            </p>
+
+            <!-- ─── 3.2 ────────────────────────────────────────────────────── -->
+            <h3>3.2 &mdash; PO Assignment (PO Info)</h3>
+            <p>
+                Admin EXIM membuka PO yang sudah ada di
+                <strong>PO Info</strong>, lalu memilih PPJK yang sudah dibuat
+                dari dropdown pada field:
+            </p>
+            <div class="card-flow card-flow-blue" style="margin-top: 4px">
+                <pre
+                    style="
+                        background: transparent;
+                        color: #1e3a5f;
+                        padding: 0;
+                        margin: 0;
+                        font-size: 14px;
+                        line-height: 1.8;
+                    "
+                ><code>ETBL_PIB_HDR.emkl_emku    &larr; untuk PPJK type EMKL
+ETBL_PIB_HDR.trucking     &larr; untuk PPJK type Trucking
+ETBL_PIB_HDR.forwarding   &larr; untuk PPJK type Forwarding</code></pre>
+            </div>
+            <p>
+                Setelah PPJK dipilih, field <code>tipe_ppjk_portal</code> di SAP
+                header akan terisi otomatis sesuai tipe PPJK. Data ini akan
+                dipakai untuk filtering di PpjkTab.
+            </p>
+
+            <!-- ─── 3.3 ────────────────────────────────────────────────────── -->
+            <h3>3.3 &mdash; Send Email PPJK</h3>
+            <p>Admin EXIM mengirim email notifikasi ke PPJK berisi:</p>
+            <ul>
+                <li>Link ke Vendor Portal</li>
+                <li>Email &amp; password untuk login</li>
+                <li>Daftar PO yang perlu ditagih</li>
+            </ul>
+            <p>Email dikirim via sistem notifikasi internal EXIM.</p>
+
+            <!-- ─── 3.4 ────────────────────────────────────────────────────── -->
+            <h3>3.4 &mdash; PPJK Login &amp; Invoice Submission (PpjkTab)</h3>
+            <p>
+                PPJK login ke Vendor Portal dengan akun yang sudah dibuat.
+                Sistem membaca <code>localStorage.ppjk_type</code> dan
+                <code>localStorage.ppjk_name</code> untuk menentukan:
+            </p>
+            <ul>
+                <li>
+                    Tipe PPJK (EMKL / Trucking / Forwarding) &rarr; filter PO
+                </li>
+                <li>
+                    Nama PPJK &rarr; identifikasi PO mana yang menjadi milik
+                    PPJK tersebut
+                </li>
+            </ul>
+
+            <div class="card-flow card-flow-green">
+                <strong>API Endpoint PpjkTab:</strong>
+                <pre
+                    style="
+                        background: transparent;
+                        color: #14532d;
+                        padding: 0;
+                        margin: 4px 0 0;
+                        font-size: 13px;
+                    "
+                ><code>GET /api/invoice-approval/ppjk-portal-list
+    ?ppjk_types=EMKL,Trucking
+    &ppjk_vendor_identifier=PT ANGKUTAN LAUTAN
+    &page=1&per_page=10</code></pre>
+            </div>
+
+            <p>Setelah PO muncul, PPJK bisa melakukan:</p>
+            <ul>
+                <li>
+                    <strong>Submit Invoice</strong> &mdash; mengisi form dengan
+                    invoice items, attachments, lalu submit &rarr; status
+                    <span class="badge badge-blue">Submitted</span>
+                </li>
+                <li>
+                    <strong>Save as Draft</strong> &mdash; menyimpan draft
+                    &rarr; status <span class="badge badge-gray">Draft</span>
+                </li>
+                <li>
+                    <strong>Lihat Detail</strong> &mdash; melihat history
+                    approval &amp; detail PO
+                </li>
+            </ul>
+
+            <!-- ─── 3.5 ────────────────────────────────────────────────────── -->
+            <h3>3.5 &mdash; EXIM Internal (ExImInternalTab)</h3>
+            <p>
+                EXIM Internal melihat semua submission yang statusnya
+                <span class="badge badge-blue">Submitted</span>. Di sini EXIM
+                Internal melakukan:
+            </p>
+            <ol>
+                <li>
+                    <strong>Assign BS (Bahana Prestasi)</strong> &mdash; memilih
+                    BS untuk setiap item invoice dari dropdown master BS
+                </li>
+                <li>
+                    <strong>Approve</strong> &rarr; status berubah menjadi
+                    <span class="badge badge-green">Approved by Internal</span>
+                </li>
+                <li>
+                    <strong>Reject</strong> &rarr; status menjadi
+                    <span class="badge badge-red">Rejected by Internal</span>
+                    (PPJK bisa resubmit)
+                </li>
+            </ol>
+
+            <div class="card-flow card-flow-orange">
+                <strong>BS (Bahana Prestasi)</strong> adalah kode biaya (cost
+                code) yang digunakan untuk mengelompokkan item invoice. Contoh
+                BS: <code>FR20180001</code>, <code>FR20180002</code>, dll.
+                Setiap item invoice mendapat 1 BS. Nantinya Finance bisa
+                memproses pembayaran per BS.
+            </div>
+
+            <!-- ─── 3.6 ────────────────────────────────────────────────────── -->
+            <h3>3.6 &mdash; Approval Berjenjang</h3>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40px">#</th>
+                        <th style="width: 170px">Step</th>
+                        <th style="width: 100px">Tab</th>
+                        <th>Status Sebelum</th>
+                        <th>Status Sesudah Approve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><strong>EXIM Internal</strong></td>
+                        <td><code>ExImInternalTab</code></td>
+                        <td><span class="badge badge-blue">Submitted</span></td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by Internal</span
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><strong>SPV / Supervisor</strong></td>
+                        <td><code>SpvTab</code></td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by Internal</span
+                            >
+                        </td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by SPV</span
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><strong>AP Verificator</strong></td>
+                        <td><code>ApVerificatorTab</code></td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by SPV</span
+                            >
+                        </td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by AP</span
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><strong>AP Approval</strong></td>
+                        <td><code>ApApprovalTab</code></td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by AP</span
+                            >
+                        </td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by AP Approval</span
+                            >
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><strong>EXIM Manager</strong></td>
+                        <td><code>ExImManagerTab</code></td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by AP Approval</span
+                            >
+                        </td>
+                        <td>
+                            <span class="badge badge-green"
+                                >Approved by EXIM Manager</span
+                            >
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <p>
+                Jika di reject di step tertentu, submission kembali ke PPJK
+                dengan status
+                <span class="badge badge-red">Rejected by {role}</span>.
+                Namun <strong>ti</strong>dak semua</strong> rejected bisa diresubmit:
+            </p>
+            <ul>
+                <li>
+</ul></li>                    <strong>Bisa</strong> resubmit:</strong> Rejected by Internal,
+                    Rejected by SPV, Rejected by Finance
+                </li>
+                <li></li>
+                    <strong>Tidak bisa resubmit</strong> (hanya EXIM Internal
+                    yang bisa Revise):
+                    <span class="badge badge-red">Rejected by AP</span>,
+                    <span class="badge badge-red">Rejected by AP Approval</span>,
+                    <span class="badge badge-red">Rejected by EXIM Manager</span>
+                </li>
+            </ul>
+
+            <div class="card-flow card-flow-green">
+                <strong>&#128161; Catatan:</strong> SPV (Supervisor) memiliki
+                akses <strong>enableItemEdit</strong> sehingga bisa mengedit
+                item invoice sebelum approve. BS yang sudah diassign oleh EXIM
+                Internal tetap terbaca dan tidak berubah.
+            </div>
+
+            <!-- ─── 3.7 ────────────────────────────────────────────────────── -->
+            <h3>3.7 &mdash; Finance Payment</h3>
+            <p>
+                Finance membuka <strong>FinanceTab</strong> yang memiliki 3
+                sub-tab:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Sub-tab</th>
+                        <th>Fungsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>Need Process</code></td>
+                        <td>
+                            Menampilkan summary per BS (total amount, pending,
+                            processed). Finance pilih date range, klik BS, lalu
+                            set payment date &amp; upload bukti bayar
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>History</code></td>
+                        <td>
+                            Riwayat payment yang sudah diproses, termasuk
+                            tanggal bayar, file attachment, dan total amount
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="card-flow card-flow-purple">
+                <strong>Proses Payment:</strong>
+                <pre
+                    style="
+                        background: transparent;
+                        color: #4c1d95;
+                        padding: 0;
+                        margin: 4px 0 0;
+                        font-size: 13px;
+                        line-height: 1.8;
+                    "
+                ><code>1. Finance pilih date_from &amp; date_to
+2. Klik Search &rarr; muncul daftar BS summary
+3. Klik BS name &rarr; lihat detail invoice items per BS
+4. Klik "Process Payment" &rarr; set payment_date + upload bukti bayar
+5. Konfirmasi &rarr; status items berubah menjadi "processed"
+6. Approval status submission berubah menjadi "Payment Processed"
+7. PPJK / Vendor bisa melihat payment_date di tab mereka</code></pre>
+            </div>
+
+            <!-- ─── 3.8 ────────────────────────────────────────────────────── -->
+            <h3>3.8 &mdash; SAP Invoice Number</h3>
+            <p>
+                Setiap item invoice yang disubmit (PPJK atau Vendor) otomatis
+                mendapatkan <strong>SAP Invoice Number</strong> unik yang
+                digenerate oleh <strong>backend</strong> saat submission dibuat.
+                Format: <code>SAP-{timestamp}{random}</code>.
+                Nomor ini tampil di kolom <strong>SAP INVOICE NUMBER</strong>
+                pada tabel list (semua tab) dan di PO Detail / Review Modal di
+                bawah field Remark. Frontend hanya menampilkan nilai dari API
+                response melalui fungsi <code>formatSapInvoiceNos()</code>.
+            </p>
+            <div class="card-flow card-flow-orange">
+                <strong>Data Flow:</strong>
+                <pre
+                    style="
+                        background: transparent;
+                        color: #7c2d12;
+                        padding: 0;
+                        margin: 4px 0 0;
+                        font-size: 13px;
+                        line-height: 1.8;
+                    "
+                ><code>Backend generate SAP-{timestamp}{random} saat:
+- POST /api/invoice-approval (submit baru)
+- POST /api/invoice-approval/draft (simpan draft)
+- PATCH /api/invoice-approval/:id/resubmit
+
+Disimpan di:
+- invoice_approval.items[].sap_invoice_number
+- invoice_items collection &rarr; sap_invoice_number
+
+Frontend membaca dari API response via:
+- formatSapInvoiceNos(sub?.items) di tabel list
+- sub.items[].sap_invoice_number di detail modal</code></pre>
+            </div>
+
+            <!-- ============================================================ -->
+            <h2>4. Status Flow</h2>
+
+            <p>Berikut diagram transisi status approval:</p>
+
+            <div class="card-flow card-flow-blue">
+                <pre
+                    style="
+                        background: transparent;
+                        color: #1e3a5f;
+                        padding: 0;
+                        margin: 0;
+                        font-size: 14px;
+                        line-height: 1.8;
+                    "
+                ><code>  [Draft]
+     |
+     v (Submit)
+  [Submitted]
+     |
+     +-- EXIM Internal -----------------------+
+     |   Approve &rarr; [Approved by Internal]   |
+     |   Reject  &rarr; [Rejected by Internal]   | &rarr; PPJK Resubmit
+     +----------------------------------------+
+     |
+     v
+  [Approved by Internal]
+     |
+     +-- SPV / Supervisor --------------------+
+     |   Approve &rarr; [Approved by SPV]       |
+     |   Reject  &rarr; [Rejected by SPV]       | &rarr; PPJK Resubmit
+     +----------------------------------------+
+     |
+     v
+  [Approved by SPV]
+     |
+     +-- AP Verificator ----------------------+
+     |   Approve &rarr; [Approved by AP]        |
+     |   Reject  &rarr; [Rejected by AP]        | &rarr; PPJK Resubmit
+     +----------------------------------------+
+     |
+     v
+  [Approved by AP]
+     |
+     +-- AP Approval -------------------------+
+     |   Approve &rarr; [Approved by AP Approval]|
+     |   Reject  &rarr; [Rejected by AP Approval]| &rarr; PPJK Resubmit
+     +----------------------------------------+
+     |
+     v
+  [Approved by AP Approval]
+     |
+     +-- EXIM Manager ------------------------+
+     |   Approve &rarr; [Approved by EXIM Manager]|
+     |   Reject  &rarr; [Rejected by EXIM Manager]| &rarr; PPJK Resubmit
+     +----------------------------------------+
+     |
+     v
+  [Approved by EXIM Manager]
+     |
+     +-- Finance -----------------------------+
+     |   Process Payment &rarr; [Payment Processed]
+     |   Reject &rarr; [Rejected by Finance]     | &rarr; PPJK Resubmit
+     +----------------------------------------+
+     |
+     v
+  [Payment Processed]  &larr; Final</code></pre>
+            </div>
+
+            <!-- ============================================================ -->
+            <h2>5. Flowchart &mdash; Alur Lengkap</h2>
+
+            <div class="flowchart-wrap">
+                <div class="mermaid" id="mermaid-diagram"></div>
+            </div>
+
+            <script>
+                (function () {
+                    var def = [
+                        "flowchart TD",
+                        "    A[Admin EXIM buat akun PPJK] --> B[Admin pilih PPJK di PO Info]",
+                        "    B --> C[System kirim email ke PPJK]",
+                        "    C --> D[PPJK login Vendor Portal]",
+                        "    D --> E[PpjkTab: lihat daftar PO]",
+                        "    E --> F{Submit Invoice?}",
+                        "    F -- Draft --> G[Draft tersimpan]",
+                        "    F -- Submit --> H[Status: Submitted]",
+                        "    G --> H",
+                        "    H --> I[ExImInternalTab: muncul di Need Approval]",
+                        "    I --> J{Approve?}",
+                        "    J -- Reject --> K[Rejected by Internal]",
+                        "    K --> L[PPJK / Vendor Resubmit]",
+                        "    L --> E",
+                        "    J -- Approve + Assign BS --> M[Approved by Internal]",
+                        "    M --> N[SpvTab: Supervisor Approve]",
+                        "    N --> O{Approve?}",
+                        "    O -- Reject --> P[Rejected by SPV]",
+                        "    P --> L",
+                        "    O -- Approve --> Q[Approved by SPV]",
+                        "    Q --> R[ApVerificatorTab: AP Verificator]",
+                        "    R --> S{Approve?}",
+                        "    S -- Reject --> T[Rejected by AP]",
+                        "    T -.-> X1[EXIM Internal Revise]",
+                        "    S -- Approve --> U[Approved by AP]",
+                        "    U --> V[ApApprovalTab: AP Approval]",
+                        "    V --> W{Approve?}",
+                        "    W -- Reject --> X[Rejected by AP Approval]",
+                        "    X -.-> X1",
+                        "    W -- Approve --> Y[Approved by AP Approval]",
+                        "    Y --> Z[ExImManagerTab: EXIM Manager]",
+                        "    Z --> AA{Approve?}",
+                        "    AA -- Reject --> AB[Rejected by EXIM Manager]",
+                        "    AB -.-> X1",
+                        "    AA -- Approve --> AC[Approved by EXIM Manager]",
+                        "    AC --> AD[FinanceTab: Process Payment]",
+                        "    AD --> AE{Process?}",
+                        "    AE -- Reject --> AF[Rejected by Finance]",
+                        "    AF --> L",
+                        "    AE -- Process --> AG[Payment Processed]",
+                        "    AG --> AH[Selesai ~ Final]",
+                        "    X1[EXIM Internal<br/>Revise via History tab] -.-> M",
+                    ];
+                    var styles = [
+                        "    style A fill:#dbeafe,stroke:#2563eb,stroke-width:2px,color:#1e40af,font-weight:700",
+                        "    style B fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px,color:#3730a3",
+                        "    style C fill:#dbeafe,stroke:#2563eb,stroke-width:1px,color:#1e40af",
+                        "    style D fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "    style E fill:#f3e8ff,stroke:#9333ea,stroke-width:2px,color:#6b21a8,font-weight:700",
+                        "    style F fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style G fill:#f3f4f6,stroke:#6b7280,stroke-width:1px,color:#374151",
+                        "    style H fill:#dbeafe,stroke:#2563eb,stroke-width:1px,color:#1e40af",
+                        "    style I fill:#fce7f3,stroke:#db2777,stroke-width:2px,color:#9d174d,font-weight:700",
+                        "    style J fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style K fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,font-weight:700",
+                        "    style L fill:#fef2f2,stroke:#f97316,stroke-width:1px,color:#9a3412",
+                        "    style M fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "    style N fill:#fdf4ff,stroke:#c026d3,stroke-width:1px,color:#86198f",
+                        "    style O fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style P fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,font-weight:700",
+                        "    style Q fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "    style R fill:#e0e7ff,stroke:#4f46e5,stroke-width:1px,color:#3730a3",
+                        "    style S fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style T fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,font-weight:700",
+                        "    style U fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "    style V fill:#fdf4ff,stroke:#c026d3,stroke-width:1px,color:#86198f",
+                        "    style W fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style X fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,font-weight:700",
+                        "    style Y fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "    style Z fill:#f3e8ff,stroke:#9333ea,stroke-width:1px,color:#6b21a8",
+                        "    style AA fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style AB fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,font-weight:700",
+                        "    style AC fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "    style AD fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style AE fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    style AF fill:#fee2e2,stroke:#ef4444,stroke-width:2px,color:#991b1b,font-weight:700",
+                        "    style AG fill:#dcfce7,stroke:#22c55e,stroke-width:2px,color:#166534,font-weight:700",
+                        "    style AH fill:#f0fdf4,stroke:#22c55e,stroke-width:2px,color:#065f46,font-weight:700",
+                        "    style X1 fill:#fef3c7,stroke:#d97706,stroke-width:2px,color:#92400e,font-weight:700",
+                        "    linkStyle 22,27,32,40 stroke:#d97706,stroke-width:2px,stroke-dasharray: 5 5",
+                    ];
+                    var el = document.getElementById("mermaid-diagram");
+                    if (el) {
+                        el.textContent =
+                            def.join("\n") + "\n" + styles.join("\n");
+                    }
+                })();
+            </script>
+
+            <h3>5.1 &mdash; Sequence Diagram Interaksi Aktor</h3>
+            <p>Berikut diagram sekuensial yang menunjukkan interaksi antar aktor dalam satu siklus approval:</p>
+
+            <div class="flowchart-wrap">
+                <div class="mermaid" id="mermaid-sequence"></div>
+            </div>
+
+            <script>
+                (function () {
+                    var seqDef = [
+                        "sequenceDiagram",
+                        "    participant PPJK as PPJK",
+                        "    participant Portal as Vendor Portal",
+                        "    participant BE as Backend API",
+                        "    participant EXIM as EXIM Internal",
+                        "    participant SPV as Supervisor",
+                        "    participant APV as AP Verificator",
+                        "    participant APA as AP Approval",
+                        "    participant MGR as EXIM Manager",
+                        "    participant FIN as Finance",
+                        "",
+                        "    Note over PPJK,Portal: Step 1 - Submit Invoice",
+                        "    PPJK->>+Portal: Login & lihat daftar PO",
+                        "    Portal->>+BE: GET /ppjk-portal-list",
+                        "    BE-->>-Portal: Daftar PO milik PPJK",
+                        "    Portal-->>-PPJK: Tampilkan tabel PO",
+                        "    PPJK->>+Portal: Klik icon Edit pada PO",
+                        "    Portal-->>-PPJK: Buka form AddInvoiceModal",
+                        "    PPJK->>+Portal: Isi items & upload file",
+                        "    Portal->>BE: Upload file ke OneDrive",
+                        "    BE-->>Portal: File terupload",
+                        "    Portal->>+BE: POST /invoice-approval (submit)",
+                        "    BE-->>-Portal: Submission sukses (status: Submitted)",
+                        "    Portal-->>-PPJK: Sukses, refresh list",
+                        "",
+                        "    Note over EXIM,Portal: Step 2 - EXIM Internal Approve",
+                        "    EXIM->>+Portal: Buka ExImInternalTab (Need Approval)",
+                        "    Portal->>+BE: GET /invoice-approval?status=Submitted",
+                        "    BE-->>-Portal: List submission pending",
+                        "    Portal-->>-EXIM: Tampilkan tabel + SUBMITTER column",
+                        "    EXIM->>+Portal: Pilih submission & assign BS per item",
+                        "    Portal->>+BE: PATCH /invoice-approval/:id/approve-internal",
+                        "    BE-->>-Portal: Approved by Internal + BS tersimpan",
+                        "    Portal-->>-EXIM: Sukses, refresh",
+                        "",
+                        "    Note over SPV,Portal: Step 3-6 - Approval Berjenjang",
+                        "    SPV->>+Portal: SpvTab (Need Approval)",
+                        "    Portal->>+BE: GET /invoice-approval?status=Approved by Internal",
+                        "    BE-->>-Portal: List perlu approval SPV",
+                        "    Portal-->>-SPV: Tampilkan tabel & ReviewModal",
+                        "    SPV->>+Portal: Approve (bisa edit items)",
+                        "    Portal->>+BE: PATCH /invoice-approval/:id/approve-spv",
+                        "    BE-->>-Portal: Approved by SPV",
+                        "    Portal-->>-SPV: Sukses",
+                        "",
+                        "    APV->>+Portal: ApVerificatorTab",
+                        "    Portal->>+BE: GET /invoice-approval?status=Approved by SPV",
+                        "    BE-->>-Portal: List perlu approval AP Verificator",
+                        "    APV->>+Portal: Approve",
+                        "    Portal->>+BE: PATCH /invoice-approval/:id/approve-ap",
+                        "    BE-->>-Portal: Approved by AP",
+                        "",
+                        "    APA->>+Portal: ApApprovalTab",
+                        "    Portal->>+BE: GET /invoice-approval?status=Approved by AP",
+                        "    BE-->>-Portal: List perlu approval AP Approval",
+                        "    APA->>+Portal: Approve",
+                        "    Portal->>+BE: PATCH /invoice-approval/:id/approve-ap-approval",
+                        "    BE-->>-Portal: Approved by AP Approval",
+                        "",
+                        "    MGR->>+Portal: ExImManagerTab",
+                        "    Portal->>+BE: GET /invoice-approval?status=Approved by AP Approval",
+                        "    BE-->>-Portal: List perlu approval EXIM Manager",
+                        "    MGR->>+Portal: Approve",
+                        "    Portal->>+BE: PATCH /invoice-approval/:id/approve-manager",
+                        "    BE-->>-Portal: Approved by EXIM Manager",
+                        "",
+                        "    Note over FIN,Portal: Step 7 - Finance Payment",
+                        "    FIN->>+Portal: FinanceTab (Need Process)",
+                        "    Portal->>+BE: GET /finance-bs-list",
+                        "    BE-->>-Portal: Summary per BS",
+                        "    Portal-->>-FIN: Tampilkan grouping BS",
+                        "    FIN->>+Portal: Klik BS lalu Process Payment",
+                        "    Portal->>+BE: PATCH /invoice-approval/:id/process-payment",
+                        "    BE-->>-Portal: Payment processed",
+                        "    Portal-->>-FIN: Sukses",
+                        "",
+                        "    Note over PPJK,Portal: Step 8 - PPJK lihat hasil",
+                        "    PPJK->>+Portal: Buka PpjkTab",
+                        "    Portal->>+BE: GET /ppjk-portal-list",
+                        "    BE-->>-Portal: List PO & status terbaru",
+                        "    Portal-->>-PPJK: Status = Payment Processed + Tgl Bayar",
+                    ];
+                    var seqEl = document.getElementById("mermaid-sequence");
+                    if (seqEl) {
+                        seqEl.textContent = seqDef.join("\n");
+                    }
+                })();
+            </script>
+
+            <h3>5.2 &mdash; Usecase &mdash; Kemampuan Tiap Role</h3>
+            <p>
+                Diagram di bawah menunjukkan fitur dan modal yang tersedia
+                untuk setiap role dalam sistem Invoice Approval. Setiap role
+                memiliki tab, sub-tab, dan modal interaksi yang berbeda.
+            </p>
+
+            <div class="flowchart-wrap">
+                <div class="mermaid" id="mermaid-usecase"></div>
+            </div>
+
+            <script>
+                (function () {
+                    var ucDef = [
+                        "flowchart LR",
+                        "",
+                        "    %% ===== PPJK ===== %%",
+                        "    subgraph P[PPJK]",
+                        "        p1[[Lihat PO]]",
+                        "        p2[[Submit Invoice]]",
+                        "        p3[[Resubmit]]",
+                        "        p4[[Edit Draft]]",
+                        "        p5[[Lihat Detail]]",
+                        "        p6[[Upload File]]",
+                        "    end",
+                        "",
+                        "    %% ===== Vendor ===== %%",
+                        "    subgraph V[Vendor]",
+                        "        v1[[Lihat PO]]",
+                        "        v2[[Submit Invoice]]",
+                        "        v3[[Resubmit]]",
+                        "        v4[[Edit Draft]]",
+                        "        v5[[Lihat Detail]]",
+                        "        v6[[Upload File]]",
+                        "    end",
+                        "",
+                        "    %% ===== EXIM Internal ===== %%",
+                        "    subgraph E[EXIM Internal]",
+                        "        e1[[Need Approval]]",
+                        "        e2[[History]]",
+                        "        e3[[Assign BS]]",
+                        "        e4[[Approve with BS]]",
+                        "        e5[[Reject]]",
+                        "        e6[[Edit Items]]",
+                        "        e7[[Supplementary Draft]]",
+                        "        e8[[Revise]]",
+                        "        e9[[Send Back]]",
+                        "    end",
+                        "",
+                        "    %% ===== Supervisor SPV ===== %%",
+                        "    subgraph S[Supervisor SPV]",
+                        "        s1[[Need Approval]]",
+                        "        s2[[History]]",
+                        "        s3[[Approve]]",
+                        "        s4[[Reject]]",
+                        "        s5[[Edit Items]]",
+                        "    end",
+                        "",
+                        "    %% ===== AP Verificator ===== %%",
+                        "    subgraph A[AP Verificator]",
+                        "        a1[[Need Approval]]",
+                        "        a2[[History]]",
+                        "        a3[[Approve]]",
+                        "        a4[[Reject]]",
+                        "    end",
+                        "",
+                        "    %% ===== AP Approval ===== %%",
+                        "    subgraph AA[AP Approval]",
+                        "        aa1[[Need Approval]]",
+                        "        aa2[[History]]",
+                        "        aa3[[Approve]]",
+                        "        aa4[[Reject]]",
+                        "    end",
+                        "",
+                        "    %% ===== EXIM Manager ===== %%",
+                        "    subgraph M[EXIM Manager]",
+                        "        m1[[Need Approval]]",
+                        "        m2[[History]]",
+                        "        m3[[Approve]]",
+                        "        m4[[Reject]]",
+                        "    end",
+                        "",
+                        "    %% ===== Finance ===== %%",
+                        "    subgraph F[Finance]",
+                        "        f1[[Need Process]]",
+                        "        f2[[History]]",
+                        "        f3[[Detail BS]]",
+                        "        f4[[Payment]]",
+                        "        f5[[Upload File]]",
+                        "    end",
+                        "",
+                        "    %% ===== Class Definitions ===== %%",
+                        "    classDef blue fill:#eff6ff,stroke:#3b82f6,stroke-width:2px,color:#1e40af",
+                        "    classDef teal fill:#f0fdfa,stroke:#14b8a6,stroke-width:2px,color:#065f46",
+                        "    classDef purple fill:#f5f3ff,stroke:#8b5cf6,stroke-width:2px,color:#5b21b6",
+                        "    classDef amber fill:#fffbeb,stroke:#f59e0b,stroke-width:2px,color:#92400e",
+                        "    classDef pink fill:#fdf2f8,stroke:#ec4899,stroke-width:2px,color:#9d174d",
+                        "    classDef cyan fill:#ecfeff,stroke:#06b6d4,stroke-width:2px,color:#155e75",
+                        "    classDef indigo fill:#eef2ff,stroke:#6366f1,stroke-width:2px,color:#3730a3",
+                        "    classDef emerald fill:#ecfdf5,stroke:#10b981,stroke-width:2px,color:#065f46",
+                        "",
+                        "    %% ===== Apply Classes ===== %%",
+                        "    class p1,p2,p3,p4,p5,p6 blue",
+                        "    class v1,v2,v3,v4,v5,v6 teal",
+                        "    class e1,e2,e3,e4,e5,e6,e7,e8,e9 purple",
+                        "    class s1,s2,s3,s4,s5 amber",
+                        "    class a1,a2,a3,a4 pink",
+                        "    class aa1,aa2,aa3,aa4 cyan",
+                        "    class m1,m2,m3,m4 indigo",
+                        "    class f1,f2,f3,f4,f5 emerald",
+                        "",
+                        "    %% ===== Subgraph Styles ===== %%",
+                        "    style P fill:#dbeafe,stroke:#3b82f6,stroke-width:2px,color:#1e40af",
+                        "    style V fill:#ccfbf1,stroke:#14b8a6,stroke-width:2px,color:#065f46",
+                        "    style E fill:#ede9fe,stroke:#8b5cf6,stroke-width:2px,color:#5b21b6",
+                        "    style S fill:#fef3c7,stroke:#f59e0b,stroke-width:2px,color:#92400e",
+                        "    style A fill:#fce7f3,stroke:#ec4899,stroke-width:2px,color:#9d174d",
+                        "    style AA fill:#cffafe,stroke:#06b6d4,stroke-width:2px,color:#155e75",
+                        "    style M fill:#e0e7ff,stroke:#6366f1,stroke-width:2px,color:#3730a3",
+                        "    style F fill:#d1fae5,stroke:#10b981,stroke-width:2px,color:#065f46",
+                    ];
+                    var ucEl = document.getElementById("mermaid-usecase");
+                    if (ucEl) {
+                        ucEl.textContent = ucDef.join("\n");
+                    }
+                })();
+            </script>
+
+            <!-- ============================================================ -->
+            <h2>6. Data Model &amp; Collection</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 200px">Collection / Table</th>
+                        <th>Keterangan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>invoice_approval</code></td>
+                        <td>
+                            Dokumen utama submission. Berisi PO reference, items
+                            (dengan BS, SAP Invoice Number), attachments,
+                            status, timeline approval, payment info.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>invoice_items</code></td>
+                        <td>
+                            Replika item invoice per approval. Sinkronisasi
+                            otomatis dari <code>invoice_approval</code>. Dipakai
+                            untuk filtering &amp; grouping BS di Finance.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>master_bs</code></td>
+                        <td>
+                            Master data Bahana Prestasi (cost code). Berisi kode
+                            BS dan deskripsi. Digunakan dropdown di
+                            ExImInternalTab.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code>invoice_finance_history_logs</code></td>
+                        <td>
+                            Log batch payment yang sudah diproses Finance.
+                            Berisi date range, BS name, total amount, file
+                            attachment, timestamp.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ============================================================ -->
+            <h2>7. API Endpoints</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 70px">Method</th>
+                        <th>Endpoint</th>
+                        <th>Fungsi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-green">GET</span></td>
+                        <td>
+                            <code>/api/invoice-approval/ppjk-portal-list</code>
+                        </td>
+                        <td>
+                            List PO untuk PPJK (filter by ppjk_types &amp;
+                            vendor_identifier)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">GET</span></td>
+                        <td>
+                            <code
+                                >/api/invoice-approval/vendor-portal-list</code
+                            >
+                        </td>
+                        <td>List PO untuk Vendor</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">GET</span></td>
+                        <td><code>/api/invoice-approval</code></td>
+                        <td>
+                            List approval untuk approval chain (filter by
+                            status, page, dll)
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">GET</span></td>
+                        <td><code>/api/invoice-approval/:id</code></td>
+                        <td>Detail submission by ID</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">POST</span></td>
+                        <td><code>/api/invoice-approval</code></td>
+                        <td>Create submission baru (submit invoice)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">POST</span></td>
+                        <td><code>/api/invoice-approval/draft</code></td>
+                        <td>Simpan draft submission</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">POST</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/resubmit</code>
+                        </td>
+                        <td>Resubmit submission yang rejected</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">POST</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/supplementary-draft</code>
+                        </td>
+                        <td>Buat supplementary draft (EXIM Internal)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/update-draft</code>
+                        </td>
+                        <td>Update &amp; submit draft yang sudah ada</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/approve-internal</code>
+                        </td>
+                        <td>EXIM Internal approve + assign BS per item</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/approve-spv</code>
+                        </td>
+                        <td>Supervisor approve</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/approve-ap</code>
+                        </td>
+                        <td>AP Verificator approve</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/approve-ap-approval</code>
+                        </td>
+                        <td>AP Approval approve</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/approve-manager</code>
+                        </td>
+                        <td>EXIM Manager approve</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/revise-internal</code>
+                        </td>
+                        <td>EXIM Internal revise (dari History tab)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/update-items</code>
+                        </td>
+                        <td>Update items submission sebelum approve</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/process-payment</code>
+                        </td>
+                        <td>Finance process payment (batch per BS)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">PATCH</span></td>
+                        <td>
+                            <code>/api/invoice-approval/:id/reject-{role}</code>
+                        </td>
+                        <td>Reject submission oleh role terkait</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">GET</span></td>
+                        <td>
+                            <code>/api/invoice-approval/finance-bs-list</code>
+                        </td>
+                        <td>List BS summary untuk Finance (filter date range)</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">GET</span></td>
+                        <td>
+                            <code>/api/invoice-approval/finance-history-logs</code>
+                        </td>
+                        <td>Riwayat payment batch yang sudah diproses</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- ============================================================ -->
+            <h2>8. Ringkasan</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 180px">Konsep</th>
+                        <th>Penjelasan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>PPJK</strong></td>
+                        <td>
+                            Pihak jasa kepabeanan (EMKL/Trucking/Forwarding)
+                            yang ditunjuk untuk menangani pengiriman. Mendapat
+                            akun khusus di Vendor Portal.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>BS (Bahana Prestasi)</strong></td>
+                        <td>
+                            Cost code yang digunakan untuk mengelompokkan biaya
+                            per item invoice. Diassign oleh EXIM Internal saat
+                            approve. Finance menggunakan BS untuk grouping
+                            payment.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>SAP Invoice Number</strong></td>
+                        <td>
+                            Nomor unik yang digenerate otomatis per item invoice
+                            saat submit. Format:
+                            <code>SAP-{timestamp}{random}</code>. Disimpan di
+                            invoice_approval &amp; invoice_items.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Approval Chain</strong></td>
+                        <td>
+                            5 level approval: EXIM Internal &rarr; SPV &rarr; AP
+                            Verificator &rarr; AP Approval &rarr; EXIM Manager.
+                            Masing-masing bisa approve atau reject. Jika reject,
+                            PPJK bisa resubmit.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong>Finance Payment</strong></td>
+                        <td>
+                            Step terakhir setelah semua approval. Finance
+                            mengelompokkan items berdasarkan BS &amp; date
+                            range, lalu memproses payment dengan upload bukti
+                            bayar.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <hr />
+
+            <div class="highlight-box">
+                <strong>&#128161; Catatan Penting:</strong>
+                Dokumen PPJK (AWB untuk AIR, B/L untuk SEA) harus sudah di-<code
+                    >isLocked</code
+                >
+                dan sudah upload final attachment agar PO eligible muncul di
+                PpjkTab. Untuk Vendor, dokumen 380 (Invoice) harus sudah
+                di-<code>isLocked</code> dan sudah upload final document.
+            </div>
+
+            <footer>
+                Dokumentasi teknis PPJK &amp; Invoice Approval &mdash; IMPAC
+                System &bull; generated dari analisis kode
+            </footer>
+        </div>
+
+        <script>
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: "base",
+                themeVariables: {
+                    background: "#ffffff",
+                    primaryColor: "#3b82f6",
+                    primaryTextColor: "#1e40af",
+                    primaryBorderColor: "#2563eb",
+                    lineColor: "#94a3b8",
+                    secondaryColor: "#f1f5f9",
+                    tertiaryColor: "#f8fafc",
+                    fontSize: "14px",
+                    fontFamily:
+                        '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                },
+                flowchart: {
+                    useMaxWidth: true,
+                    htmlLabels: true,
+                    curve: "basis",
+                    padding: 12,
+                },
+            });
+        </script>
+    </body>
+</html>
