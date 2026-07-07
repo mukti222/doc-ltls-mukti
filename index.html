@@ -93,17 +93,20 @@
       .container { padding: 28px 20px; }
     }
 
-    /* ========== Theme Switcher ========== */
-    .theme-switcher {
+    /* ========== Dropdown Theme ========== */
+    .theme-wrap {
+      position: relative;
       display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin-bottom: 32px;
+      justify-content: flex-end;
+      margin-bottom: 8px;
     }
-    .theme-btn {
-      padding: 6px 18px;
+    .theme-dropdown-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
       border: 1px solid var(--border);
-      border-radius: 999px;
+      border-radius: 8px;
       background: var(--surface);
       color: var(--text-muted);
       font-size: 13px;
@@ -111,26 +114,70 @@
       cursor: pointer;
       transition: all 0.2s ease;
     }
-    .theme-btn:hover {
+    .theme-dropdown-btn:hover {
       border-color: var(--accent);
       color: var(--accent);
     }
-    .theme-btn.active {
-      background: var(--accent);
-      color: #ffffff;
-      border-color: var(--accent);
+    .theme-dropdown-btn .arrow {
+      font-size: 10px;
+      margin-left: 4px;
+      transition: transform 0.2s ease;
+    }
+    .theme-dropdown-btn.open .arrow {
+      transform: rotate(180deg);
     }
     .theme-dot {
       display: inline-block;
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      margin-right: 6px;
       vertical-align: middle;
     }
     .theme-dot.light { background: #fbbf24; }
     .theme-dot.dark  { background: #6366f1; }
     .theme-dot.green { background: #4ade80; }
+    .theme-menu {
+      position: absolute;
+      top: calc(100% + 4px);
+      right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px var(--card-shadow);
+      padding: 4px;
+      display: none;
+      z-index: 100;
+      min-width: 150px;
+    }
+    .theme-menu.open {
+      display: block;
+    }
+    .theme-option {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: 100%;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      background: transparent;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .theme-option:hover {
+      background: var(--card-hover);
+    }
+    .theme-option .check {
+      margin-left: auto;
+      color: var(--accent);
+      font-weight: 700;
+      opacity: 0;
+    }
+    .theme-option.active .check {
+      opacity: 1;
+    }
 
     /* ========== Header ========== */
     .header {
@@ -250,17 +297,27 @@
 </head>
 <body>
   <div class="container">
-    <!-- Theme Switcher -->
-    <div class="theme-switcher">
-      <button class="theme-btn active" data-theme-btn="light">
-        <span class="theme-dot light"></span>Light
+    <!-- Dropdown Theme -->
+    <div class="theme-wrap">
+      <button class="theme-dropdown-btn" id="themeDropdownBtn">
+        <span class="theme-dot light" id="themeCurrentDot"></span>
+        <span id="themeCurrentLabel">Light</span>
+        <span class="arrow">▾</span>
       </button>
-      <button class="theme-btn" data-theme-btn="dark">
-        <span class="theme-dot dark"></span>Dark
-      </button>
-      <button class="theme-btn" data-theme-btn="calm-green">
-        <span class="theme-dot green"></span>Calm Green
-      </button>
+      <div class="theme-menu" id="themeMenu">
+        <button class="theme-option active" data-theme="light">
+          <span class="theme-dot light"></span>Light
+          <span class="check">✓</span>
+        </button>
+        <button class="theme-option" data-theme="dark">
+          <span class="theme-dot dark"></span>Dark
+          <span class="check">✓</span>
+        </button>
+        <button class="theme-option" data-theme="calm-green">
+          <span class="theme-dot green"></span>Calm Green
+          <span class="check">✓</span>
+        </button>
+      </div>
     </div>
 
     <div class="header">
@@ -294,25 +351,46 @@
 
   <script>
     (function() {
-      const html = document.documentElement;
-      const saved = localStorage.getItem("docs-theme") || "light";
+      var html = document.documentElement;
+      var saved = localStorage.getItem("docs-theme") || "light";
       html.setAttribute("data-theme", saved);
 
-      document.querySelectorAll("[data-theme-btn]").forEach(function(btn) {
-        if (btn.getAttribute("data-theme-btn") === saved) {
-          btn.classList.add("active");
-        } else {
-          btn.classList.remove("active");
-        }
-        btn.addEventListener("click", function() {
-          var theme = this.getAttribute("data-theme-btn");
-          html.setAttribute("data-theme", theme);
-          localStorage.setItem("docs-theme", theme);
-          document.querySelectorAll("[data-theme-btn]").forEach(function(b) {
-            b.classList.remove("active");
-          });
-          this.classList.add("active");
+      var btn = document.getElementById("themeDropdownBtn");
+      var menu = document.getElementById("themeMenu");
+      var currentDot = document.getElementById("themeCurrentDot");
+      var currentLabel = document.getElementById("themeCurrentLabel");
+
+      var dots = { light: "light", dark: "dark", "calm-green": "green" };
+
+      function setTheme(theme) {
+        html.setAttribute("data-theme", theme);
+        localStorage.setItem("docs-theme", theme);
+        currentDot.className = "theme-dot " + (dots[theme] || "light");
+        currentLabel.textContent = theme === "calm-green" ? "Calm Green" : theme.charAt(0).toUpperCase() + theme.slice(1);
+        document.querySelectorAll(".theme-option").forEach(function(o) {
+          o.classList.toggle("active", o.getAttribute("data-theme") === theme);
         });
+      }
+
+      setTheme(saved);
+
+      btn.addEventListener("click", function(e) {
+        e.stopPropagation();
+        menu.classList.toggle("open");
+        btn.classList.toggle("open");
+      });
+
+      document.querySelectorAll(".theme-option").forEach(function(o) {
+        o.addEventListener("click", function() {
+          setTheme(this.getAttribute("data-theme"));
+          menu.classList.remove("open");
+          btn.classList.remove("open");
+        });
+      });
+
+      document.addEventListener("click", function() {
+        menu.classList.remove("open");
+        btn.classList.remove("open");
       });
     })();
   </script>
