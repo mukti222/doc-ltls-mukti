@@ -4,7 +4,7 @@
  * Build script untuk Netlify.
  * Scan folder untuk semua file *.html (kecuali index.html),
  * baca tag <title> tiap file, lalu generate index.html
- * dengan daftar kartu navigasi.
+ * dengan daftar kartu navigasi dan 3 tema (light, dark, calm-green).
  */
 
 const fs = require("fs");
@@ -18,7 +18,7 @@ function decodeHtmlEntities(text) {
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '""')
+    .replace(/&quot;/g, '"')
     .replace(/&#039;/g, "'")
     .replace(/&#x27;/g, "'")
     .replace(/&#x2F;/g, "/");
@@ -29,13 +29,11 @@ function extractTitle(filePath) {
     const content = fs.readFileSync(filePath, "utf-8");
     const match = content.match(/<title>([^<]*)<\/title>/i);
     if (match && match[1].trim()) {
-      // Decode HTML entities dulu agar &amp; menjadi &
       return decodeHtmlEntities(match[1].trim());
     }
   } catch {
     // fallback below
   }
-  // Fallback: gunakan nama file tanpa ekstensi
   return path.basename(filePath, ".html");
 }
 
@@ -84,36 +82,140 @@ function generateIndex() {
   const count = cards.length;
 
   const html = `<!doctype html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dokumentasi Teknis</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    /* ========== CSS Variables (Themes) ========== */
+    :root,
+    [data-theme="light"] {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --surface-hover: #f9fafb;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --text-file: #9ca3af;
+      --text-heading: #111827;
+      --border: #e5e7eb;
+      --border-hover: #93c5fd;
+      --card-bg: #f9fafb;
+      --card-hover: #eff6ff;
+      --card-shadow: rgba(0,0,0,0.08);
+      --icon-bg: #e0e7ff;
+      --count-bg: #eff6ff;
+      --count-text: #1d4ed8;
+      --accent: #2563eb;
+      --footer-border: #e5e7eb;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --text: #e2e8f0;
+      --text-muted: #94a3b8;
+      --text-file: #64748b;
+      --text-heading: #f1f5f9;
+      --border: #334155;
+      --border-hover: #60a5fa;
+      --card-bg: #1e293b;
+      --card-hover: #1e3a5f;
+      --card-shadow: rgba(0,0,0,0.3);
+      --icon-bg: #1e3a5f;
+      --count-bg: #1e3a5f;
+      --count-text: #93c5fd;
+      --accent: #60a5fa;
+      --footer-border: #334155;
+    }
+
+    [data-theme="calm-green"] {
+      --bg: #ecfdf5;
+      --surface: #ffffff;
+      --surface-hover: #f0fdf4;
+      --text: #14532d;
+      --text-muted: #15803d;
+      --text-file: #6b7280;
+      --text-heading: #064e3b;
+      --border: #bbf7d0;
+      --border-hover: #4ade80;
+      --card-bg: #f0fdf4;
+      --card-hover: #dcfce7;
+      --card-shadow: rgba(22,163,74,0.08);
+      --icon-bg: #bbf7d0;
+      --count-bg: #dcfce7;
+      --count-text: #16a34a;
+      --accent: #16a34a;
+      --footer-border: #bbf7d0;
+    }
+
     body {
-      background: #f5f7fa;
+      background: var(--bg);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
                    "Helvetica Neue", Arial, sans-serif;
-      color: #1f2937;
+      color: var(--text);
       line-height: 1.7;
       padding: 40px 20px;
       min-height: 100vh;
+      transition: background 0.25s ease, color 0.25s ease;
     }
     .container {
       max-width: 900px;
       margin: 0 auto;
-      background: #fff;
+      background: var(--surface);
       border-radius: 16px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      box-shadow: 0 4px 24px var(--card-shadow);
       padding: 48px 56px;
+      transition: background 0.25s ease, box-shadow 0.25s ease;
     }
     @media (max-width: 768px) {
       body { padding: 20px 12px; }
       .container { padding: 28px 20px; }
     }
 
-    /* Header */
+    /* ========== Theme Switcher ========== */
+    .theme-switcher {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 32px;
+    }
+    .theme-btn {
+      padding: 6px 18px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .theme-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+    .theme-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+    .theme-dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+    .theme-dot.light { background: #fbbf24; }
+    .theme-dot.dark  { background: #6366f1; }
+    .theme-dot.green { background: #4ade80; }
+
+    /* ========== Header ========== */
     .header {
       text-align: center;
       margin-bottom: 40px;
@@ -121,26 +223,29 @@ function generateIndex() {
     .header h1 {
       font-size: 28px;
       font-weight: 800;
-      color: #111827;
+      color: var(--text-heading);
       margin-bottom: 6px;
+      transition: color 0.25s ease;
     }
     .header h1 span { margin-right: 8px; }
     .header p {
       font-size: 15px;
-      color: #6b7280;
+      color: var(--text-muted);
+      transition: color 0.25s ease;
     }
     .header .count {
       display: inline-block;
       margin-top: 10px;
-      background: #eff6ff;
-      color: #1d4ed8;
+      background: var(--count-bg);
+      color: var(--count-text);
       font-size: 13px;
       font-weight: 600;
       padding: 4px 14px;
       border-radius: 999px;
+      transition: background 0.25s ease, color 0.25s ease;
     }
 
-    /* Cards */
+    /* ========== Cards ========== */
     .grid {
       display: flex;
       flex-direction: column;
@@ -151,17 +256,17 @@ function generateIndex() {
       align-items: center;
       gap: 16px;
       padding: 18px 22px;
-      background: #f9fafb;
-      border: 1px solid #e5e7eb;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
       border-radius: 12px;
       text-decoration: none;
       color: inherit;
       transition: all 0.2s ease;
     }
     .card:hover {
-      background: #eff6ff;
-      border-color: #93c5fd;
-      box-shadow: 0 2px 8px rgba(37,99,235,0.1);
+      background: var(--card-hover);
+      border-color: var(--border-hover);
+      box-shadow: 0 2px 8px var(--card-shadow);
     }
     .card:active {
       transform: scale(0.99);
@@ -170,12 +275,13 @@ function generateIndex() {
       flex-shrink: 0;
       width: 42px;
       height: 42px;
-      background: #e0e7ff;
+      background: var(--icon-bg);
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 20px;
+      transition: background 0.25s ease;
     }
     .card-body {
       flex: 1;
@@ -184,46 +290,62 @@ function generateIndex() {
     .card-title {
       font-size: 16px;
       font-weight: 700;
-      color: #111827;
+      color: var(--text-heading);
       margin-bottom: 2px;
+      transition: color 0.25s ease;
     }
     .card-file {
       font-size: 13px;
-      color: #9ca3af;
+      color: var(--text-file);
+      transition: color 0.25s ease;
     }
     .card-arrow {
       flex-shrink: 0;
       font-size: 20px;
-      color: #9ca3af;
-      transition: transform 0.2s ease;
+      color: var(--text-file);
+      transition: transform 0.2s ease, color 0.25s ease;
     }
     .card:hover .card-arrow {
       transform: translateX(4px);
-      color: #2563eb;
+      color: var(--accent);
     }
 
-    /* Empty state */
+    /* ========== Empty state ========== */
     .empty {
       text-align: center;
       padding: 60px 20px;
-      color: #9ca3af;
+      color: var(--text-file);
     }
-    .empty h2 { font-size: 20px; color: #6b7280; margin-bottom: 8px; border: none; }
+    .empty h2 { font-size: 20px; color: var(--text-muted); margin-bottom: 8px; border: none; }
     .empty p  { font-size: 14px; }
 
-    /* Footer */
+    /* ========== Footer ========== */
     .footer {
       text-align: center;
       margin-top: 40px;
       padding-top: 20px;
-      border-top: 1px solid #e5e7eb;
+      border-top: 1px solid var(--footer-border);
       font-size: 13px;
-      color: #9ca3af;
+      color: var(--text-file);
+      transition: border-color 0.25s ease, color 0.25s ease;
     }
   </style>
 </head>
 <body>
   <div class="container">
+    <!-- Theme Switcher -->
+    <div class="theme-switcher">
+      <button class="theme-btn active" data-theme-btn="light">
+        <span class="theme-dot light"></span>Light
+      </button>
+      <button class="theme-btn" data-theme-btn="dark">
+        <span class="theme-dot dark"></span>Dark
+      </button>
+      <button class="theme-btn" data-theme-btn="calm-green">
+        <span class="theme-dot green"></span>Calm Green
+      </button>
+    </div>
+
     <div class="header">
       <h1><span>📚</span>Dokumentasi Teknis</h1>
       <p>Pilih topik dokumentasi di bawah untuk memulai</p>
@@ -243,6 +365,31 @@ function generateIndex() {
       Dokumentasi Teknis &mdash; Generated by generate-index.js
     </div>
   </div>
+
+  <script>
+    (function() {
+      const html = document.documentElement;
+      const saved = localStorage.getItem("docs-theme") || "light";
+      html.setAttribute("data-theme", saved);
+
+      document.querySelectorAll("[data-theme-btn]").forEach(function(btn) {
+        if (btn.getAttribute("data-theme-btn") === saved) {
+          btn.classList.add("active");
+        } else {
+          btn.classList.remove("active");
+        }
+        btn.addEventListener("click", function() {
+          var theme = this.getAttribute("data-theme-btn");
+          html.setAttribute("data-theme", theme);
+          localStorage.setItem("docs-theme", theme);
+          document.querySelectorAll("[data-theme-btn]").forEach(function(b) {
+            b.classList.remove("active");
+          });
+          this.classList.add("active");
+        });
+      });
+    })();
+  </script>
 </body>
 </html>`;
 
